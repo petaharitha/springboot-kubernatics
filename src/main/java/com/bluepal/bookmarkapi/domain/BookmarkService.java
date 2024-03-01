@@ -2,6 +2,7 @@ package com.bluepal.bookmarkapi.domain;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,13 +17,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookmarkService {
     private final BookmarkRepository repository;
+
+
     @Transactional(readOnly=true)
     public BookmarksDTO getBookmarks(Integer page){
         int pageNo=page<1?0:page-1;
 
-          Pageable pageable= (Pageable) PageRequest.of(pageNo,10,Sort.Direction.DESC,"createdAt");
-          return  new BookmarksDTO(repository.findAll(pageable));
-
+          Pageable pageable=  PageRequest.of(pageNo,10,Sort.Direction.DESC,"createdAt");
+          Page<BookmarkDTO> bookmarkPage=repository.findBookmarks(pageable);
+                return  new BookmarksDTO(bookmarkPage);
     }
 
 }

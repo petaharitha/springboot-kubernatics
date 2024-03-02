@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-//@TestPropertySource(properties = {
-//        "spring.datasource.url=jdbc:tc:postgresql:14-alpine:///demo"
-//})
+@TestPropertySource(properties = {
+        "spring.datasource.url=jdbc:tc:postgresql:14-alpine:///demo"
+})
 public class BookmarkControllerTest {
     @Autowired
     private MockMvc mvc;

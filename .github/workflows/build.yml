@@ -1,9 +1,8 @@
-name: Java CI with Maven
+name: Build
 
 on:
   push:
     branches: [ "**" ]
-
 
 jobs:
   build-bookmark-api:
@@ -12,15 +11,16 @@ jobs:
     defaults:
       run:
         working-directory: ./bookmark-api
-
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: 17
           distribution: 'temurin'
-          cache: maven
+          cache: 'maven'
+
       - name: Build with Maven
         run: ./mvnw verify
 
@@ -30,4 +30,3 @@ jobs:
           ./mvnw clean package jib:dockerBuild -DskipTests
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker push ${{ secrets.DOCKER_USERNAME }}/bookmark-api
-

@@ -2,19 +2,18 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ "**" ]
+
 
 jobs:
   build-bookmark-api:
-    name:Build bookmark-api
-    runs-on:ubuntu-latest
+    name: Build bookmark-api
+    runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory:./bookmark-api
+        working-directory: ./bookmark-api
 
-    runs-on: ubuntu-latest
+    runs: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -27,10 +26,10 @@ jobs:
       - name: Build with Maven
         run: ./mvnw verify
 
-      -if: ${{github.ref == 'refs/heads/main'}}
-      name: Build and Publish Docker Image
-      run:
-        ./mvnw clean package jib:dockerBuild -DskipTests
-        docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-        docker push ${{secrets.DOCKER_USERNAME}}/bookmark-api
+      - if: ${{ github.ref == 'refs/heads/main' }}
+        name: Build and Publish Docker Image
+        run: |
+          ./mvnw clean package jib:dockerBuild -DskipTests
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/bookmarker-api
 

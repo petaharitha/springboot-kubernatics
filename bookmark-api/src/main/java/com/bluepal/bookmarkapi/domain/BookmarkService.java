@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -18,7 +19,7 @@ import java.util.List;
 public class BookmarkService {
     private final BookmarkRepository repository;
 
-
+    private final BookmarkMapper bookmarkMapper;
     @Transactional(readOnly=true)
     public BookmarksDTO getBookmarks(Integer page) {
         int pageNo = page < 1 ? 0 : page - 1;
@@ -36,6 +37,12 @@ public class BookmarkService {
             Page<BookmarkVM> bookmarkVM = repository.findByTitleContainsIgnoreCase(query, pageable);
             return new BookmarksDTO(bookmarkPage);
         }
+
+    public BookmarkDTO createBookmark(CreateBookmarkRequest request) {
+        Bookmark bookmark = new Bookmark(null, request.getTitle(), request.getUrl(), Instant.now());
+        Bookmark savedBookmark = repository.save(bookmark);
+        return bookmarkMapper.toDTO(savedBookmark);
     }
+}
 
 
